@@ -1,0 +1,163 @@
+---
+title: "Encontrando un tipo de cambio de equilibrio macroeconómico"
+author: "Martín Basualdo: @Martinbasualdo0"
+date: "Octubre 2022"
+output:
+    html_document:
+      toc: true
+      toc_depth: 4
+      number_sections: false
+      toc_float: 
+        collapsed: false
+        smooth_scroll: false
+fontsize: 15pt
+sansfont: Georgia
+---
+
+\tableofcontents
+
+```{=html}
+<style>
+body {
+text-align: justify}
+</style>
+```
+# 20 años de historia cambiaria
+
+*Prontamente se publicará en GITHUB el código abierto. Cualquier sugerencia/crítica, contactarme por twitter. Agradezco enormemente a \@AlanVersalli por los comentarios, a \@LukoLucaG por el asesoramiento en todo relacionado a la programación y a Gus por la serie del IPC.*
+
+La idea del presente trabajo fue la estimación de **cuál debería ser la devaluación necesaria** (con actualización diaria) para retornar a un nivel de tipo de cambio real multilateral (ITCRM, que da la noción de competitividad frente a los principales socios comerciales en el área de manufacturas) promedio entre junio 2002 y diciembre 2006. Luego del salto en el tipo de cambio del 2002, el régimen cambiario del gobierno se basó en el sostenimiento de un tipo de cambio "competitivo y estable", al mantener el ITCRM en torno a 160. El objetivo consistió en la acumulación de reservas mediante un robusto superávit comercial. Esto permitió acelerar un proceso de desendeudamiento al mismo tiempo que tornó sostenible al crecimiento económico y salarial. El resultado final del trabajo es el siguiente:
+
+```{r echo=F, message=FALSE, warning=FALSE}
+htmltools::includeHTML("./output/grafico_brecha.html")
+```
+
+<!-- El contexto actual, sin embargo, es diferente a aquél período, dado que nos encontramos en un régimen de alta inflación, con expectativas de hasta 95% para diciembre 2022 (REM agosto 2022). Esta situación se encuentra agravada por el bajo nivel de reservas netas, producto de una prolongada apreciación real, pero con alivios de corto alcance producto de un sin fin de regulaciones, prohibiciones y cambios discrecionales que impiden la formación de proyecciones, generan volatilidad, conflictos sociales e ineficiencias económicas. Cuatro grandes patas configuran dicha situación: -->
+
+<!-- -   Restricciones a la compra de dólar ahorro. -->
+
+<!-- -   Restricciones al comercio exterior a través de las licencias no automáticas para importaciones. -->
+
+<!-- -   Altos precios internacionales que garantizan *temporalmente* un superávit comercial. -->
+
+<!-- -   Toma de deuda mediante bonos duales y venta de contratos de dólar futuro, que controlan la expectativa de devaluación pero a costa de aumentar los perjuicios de aumentar el tipo de cambio en el futuro. -->
+
+<!-- ## ¿Hay tiempo para gradualismo? -->
+
+Una devaluación de alrededor un 80% estimada tiene enormes consecuencias económicas y sociales. En el corto plazo, el desempleo y la inflación repuntan, mientras que la economía se contrae. El efecto es claro y bastante acordado por la literatura nacional. En el mediano y largo plazo, en cambio, los salarios se guían por otros parámetros. De hecho, en el período caracterizado por un tipo de cambio competitivo y estable, los salarios reales y en dólares subían a pesar de las micro-devaluaciones requeridas para sostener la competitividad.
+
+El nivel del índice del tipo de cambio real multilateral elegido es frecuentemente señalado como "excesivamente devaluado", y por lo tanto, "generador de más inflación". El razonamiento es lógico: la contracara del abundante superávit comercial que caracterizó al período que implementó tal esquema fue la de un aumento de la base monetaria no completamente esterilizado. Las presiones inflacionarias consecuentes erosionarían la competitividad que se intentó lograr en primer lugar. Sin embargo, las reservas internacionales tienen la función de un "seguro" para contextos internacionales (o nacionales) desfavorables. La forma en la que Argentina se inserta en el orden mundial configura una doble vulnerabilidad. Por un lado, el saldo de la balanza comercial depende de los precios internacionales, que presentan una gran variabilidad producto de nuestra canasta exportadora. Por el otro, los flujos de capital se mueven en base a la política monetaria de la FED, quien determina la tasa de interés en base a los requerimientos de su propia economía doméstica, sin importar de los efectos derrame que la misma genera. La suba de la tasa de Estados Unidos genera un aumento en el riesgo país al mismo tiempo que baja los precios de los commodities. En definitiva, las reservas internacionales brindan estabilidad para eventos futuros desfavorables a costa de un sesgo inflacionario.
+
+Además, una devaluación permitiría minimizar (e incluso eliminar) la brecha cambiaria que incentiva la sobrefacturación y adelantos de importaciones y la subfacturacón y postergaciones de las exportaciones. De esta manera, erradicaría la necesidad de la implementación de un sin fin de regulaciones y prohibiciones, favoreciendo la eficiencia económica.
+
+En relación a la cuestión distributiva, sí, en el corto plazo hay una transferencias de ingresos de los trabajadores a los exportadores. Una forma de paliar tal efecto es mediante la suba de los derechos de exportación, que ya son altos de por sí. La distribución del ingreso, en el mediano y largo plazo es determinada por otros mecanismos, como el impuesto a las ganancias y al patrimonio, pero no por el nivel del tipo de cambio. Ambos son por excelencia los tributos más progresivos, y la idea es sencilla: cuanto más se gana, más se paga.
+
+La tradición cambiaria de nuestra historia está condenada al cortoplacismo. Se la ha utilizado tanto para fomentar la actividad económica y los salarios, como para el anclaje de expectativas inflacionarias, a costa de sacrificar un sendero sostenible de crecimiento. Más allá de que parten de buenas intenciones, llevan a un infierno que, a la mediana o a la larga, termina siendo impostergable. Sucede, de hecho, que cuando las apreciaciones del tipo de cambio son persistentes en el tiempo, el saldo de la cuenta corriente, si no es ajustada por el tipo de cambio, es contenida mediante regulaciones, prohibiciones y por ciertos instrumentos de deuda que pueden llegar a hacer más costosa una devaluación futura (por ejemplo, la venta de contratos de dólar futuro y la emisión de bonos con seguro de cambio).
+
+```{r echo=F, message=FALSE, warning=FALSE}
+htmltools::includeHTML("./output/devaluacion_argentina.html")
+```
+
+<!-- La actual gestión económica se encuentra ya imposibilitada de llevar a cabo tal medida, las elecciones se encuentran a un año de distancia. Por lo tanto, pese a la presión del FMI, se desplegarán una batería de medidas para postergar el infierno: "dólar soja", "dólar Qatar", más CEPO, más productos con licencias no automáticas, bonos duales, venta de dólar futuro, etc. Esto tiene una consecuencia para la siguiente gestión: los costos de una devaluación aumentan a medida que pasa el tiempo. -->
+
+# La apreciación cambiaria en una historia de 5 partes
+
+Aclaración: las distinciones entre períodos es arbitraria, su objeto es el de facilitar la comprensión de los mismos. A modo de complemento, se presenta la evolución de las monedas de los 3 principales socios comerciales:
+
+```{r echo=F, message=FALSE, warning=FALSE}
+htmltools::includeHTML("./output/indice_monedas.html")
+```
+
+## Julio 2002 - Diciembre 2006
+
+En esta sección no hay mucho que decir. El objetivo de la política cambiaria fue la del sostenimiento de un tipo de cambio competitivo y estable, cuyo fin era el de la acumulación de reservas internacionales mediante un robusto superávit comercial. El contexto internacional favoreció de manera irrepetible a tal política. Pese a la suba de la tasa de la FED en julio 2004, una apreciación de los principales socios comerciales dio margen para hacer lo mismo a nivel nacional. De hecho, el tipo de cambio real cayó un 43% en el período analizado.
+
+Hubo solo un momento en que la brecha entre el tipo de cambio de equilibrio y el mayorista fue relativamente alta. Brasil devaluó fuertemente su moneda a partir de mayo del 2002, cuyos máximos llegaron entre septiembre y marzo del 2003, que, sumado a la apreciación nominal del peso argentino, impulsó la brecha hasta un 15% en marzo del 2003.
+
+## Enero 2007 - Octubre 2011
+
+```{r echo=F, message=FALSE, warning=FALSE}
+htmltools::includeHTML("./output/2006-2012.html")
+```
+
+Una vez tomada la decisión de intervenir en la fuente de estadísticas oficiales, se perdió una referencia fundamental a la hora de calcular el ITCRM. La política de un tipo de cambio competitivo y estable se abandonó por fuerzas mayores. Fue al inicio de este período que la brecha tocó por última vez el 0% (7 de marzo del 2008). A partir de ese momento, una fuerte apreciación real local antecedió a la gran crisis financiera global de Estados Unidos. Vale la pena observar que primero la brecha fue propulsada por una apreciación nominal del peso iniciada en mayo del 2008. Luego, sobretodo a partir de octubre de ese año, las monedas de los principales socios comerciales (excluyendo el yuan chino, que permaneció estable) comenzaron un sendero de devaluación. La suba del tipo de cambio mayorista doméstico no fue suficiente, dejando un máximo de brecha en un 31% entre el 22 de octubre y 23 de noviembre del 2008.
+
+Posteriormente, se estabilizó el escenario global, pero no el local. En diciembre del 2009 se retoma un sendero creciente del tipo de cambio de equilibrio macroeconómico, no acompañado por el mayorista. La brecha alcanzó un máximo del 46% el 4 de octubre del 2011. El resultado fue el de una pérdida de competitividad de los bienes y servicios nacionales en relación al resto del mundo. El superávit de cuenta corriente no era sostenible en este contexto mediante un mecanismo de precios, por lo que se recurrió a una batería de medidas restrictivas, iniciadas en el 28 de octubre del 2011, que dan lugar al siguiente período.
+
+## Octubre 2011 - Diciembre 2015
+
+```{r echo=F, message=FALSE, warning=FALSE}
+htmltools::includeHTML("./output/2011-2016.html")
+```
+
+El 28 de octubre del 2011, a pocos días de la reelección de Cristina Kirchner, se inició un período de continuas restricciones en lo referido al sector externo, tanto para la adquisición de divisas como para el comercio de bienes y servicios, producto de un déficit creciente de cuenta corriente a partir del tercer trimestre del 2010.
+
+El real comenzó un proceso devaluatorio de gran escala a partir de marzo del 2012, que no culminaría hasta diciembre del 2016. El impacto sobre la brecha entre el tipo de cambio de equilibrio y el oficial es notable. En noviembre del 2013 llegó a ser del 64%. Pero luego, el BCRA permitió una escalada del dólar entre el 21 y el 24 de enero del 2014 (cuya cotización pasó de \$6,83 a \$8). Esta movida permitió una reducción de la brecha a un 33%, pero no estuvo dentro de los planes de gobierno sostener tal nivel de competitividad. En especial, porque no sabría a qué tasa devaluar, ya que el dato de inflación estaba subestimado por el ente oficial.
+
+El real no dio tregua, y esta vez, de la mano del euro, generaron una pérdida de competitividad argentina récord a lo largo de los 20 años bajo análisis. La brecha alcanzó en diciembre del 2015 la cifra de 119%.
+
+En este contexto, la estabilidad cambiaria fue sostenible únicamente a través de una acumulación de medidas restrictivas en la adquisición de divisas y en las transacciones relacionadas al comercio exterior. Las declaraciones juradas anticipadas a la importación, la necesidad de exportar el monto importado, la prohibición a la compra de dólares para ahorro (15 de junio 2012) fueron un ejemplo. Para ver una excelente cronología del CEPO cambiario impuesto para frenar la *inevitable* salida de divisas en el período 2011-2015, ver [chequeado](https://chequeado.com/el-explicador/cronologia-del-cepo-cambiario-como-vario-entre-2011-y-2020/).
+
+De igual manera, se implementaron ciertas medidas que, a costa de aumentar el precio de una devaluación futura, dieron cierta estabilidad de muy corto alcance. La venta de dólar futuro por parte del BCRA es un ejemplo. El intento de manipular las expectativas devaluatorias tuvo como consecuencia una expansión equivalente al 12% de la base monetaria de ese momento al convalidar la brecha cambiaria en el 2016 (Dal Poggeto & Kerner 2022).
+
+## Diciembre 2015 - Agosto 2019
+
+```{r echo=F, message=FALSE, warning=FALSE}
+htmltools::includeHTML("./output/2015-2020.html")
+```
+
+Finalmente, el 17 de diciembre del 2015, la nueva gestión convalidó la brecha cambiaria pese a la expansión monetaria consecuente. La brecha se desplomó de 119% a 61%. El BCRA, bajo gestión de Sturzenegger, estableció un régimen monetario de *inflation targeting* que fijaba la tasa de interés en base al objetivo de inflación. Se optó por un tipo de cambio flexible, eliminaron las restricciones al acceso de dólares oficiales y se abrió la cuenta capital.
+
+El ingreso masivo de capitales del exterior tuvo un doble rol. Primero, permitió engrosar las deterioradas reservas netas. Segundo, estableció un nivel de tipo de cambio muy por debajo del "equilibrio macroeconómico". La brecha de un 70% y 80% que se observó entre mayo-16 y diciembre-17 (con la cuenta capital abierta y sin ninguna restricción al comercio ni al acceso de divisas) tuvo como consecuencia un fuerte déficit de cuenta corriente, que llegó a ser de 9.163 millones de USD en el 2017. La suba de la tasa de interés a fines del 2016 y principios del 2017 profundizó la apreciación cambiaria, dejando una brecha del 95%, similar a la del peor año del último Kirchnerismo (2015).
+
+"En ese momento, la euforia de los mercados parecía haber llegado para siempre, algo que en países como el nuestro sabemos que rara vez sucede" (Dal Poggetto & Kerner 2022, p.81). En diciembre del 2017 el modelo comienza a dar sus primeros tropiezos. El tipo de cambio pasó a cotizar \$17,31 el 13 de diciembre para subir a \$19,2 el 28 de diciembre (día en que Sturzenegger señala como el mayor ataque en su gobierno a la autonomía del BCRA). Lo demás es trágico: mientras que la tasa de interés de la FED no daba tregua, las monedas de los principales socios comerciales acompañaron con una fuerte devaluación; además, se avecinaba una sequía de gran importancia. El real en marzo, el euro en abril y el yuan en junio. El BCRA no tenía gran margen de maniobra, no había tasa de interés suficiente para frenar la corrida ni tampoco estaba dispuesto a dejar que el tipo de cambio fluctúe. Por lo tanto, tomó una opción extremadamente costosa, la de la venta de reservas para contener las expectativas. En su mayor intento, el 25 de abril realizó una venta de 1.500 millones de USD. La brecha alcanzó un 78%, pero el contexto era irremontable, era la tormenta perfecta. A partir de allí, pese al anuncio de un crédito con el FMI, el tipo de cambio tomó vida propia.
+
+El 14 de junio renuncia Sturzenegger a la presidencia del BCRA para ser reemplazado por Caputo. Ante el visto malo del FMI, cesó la intervención en el mercado cambiario con reservas, por lo que el instrumento fue la tasa de política monetaria. De igual manera, se recurrió a dos instrumentos con costos a mediano plazo: ventas de contratos a dólar futuro y un bono "híbrido" con seguro de cambio. Esta calma relativa fue interrumpida por uno de los peores *bloopers* del gobierno, en un momento que uno debería reírse para no llorar, el 29 de agosto del 2018 se publica una [grabación de Mauricio Macri](https://www.youtube.com/watch?v=z-GkRlBsRak) anunciando un adelanto de fondos **inexistente** con el FMI para "garantizar el cumplimiento financiero del año próximo". El tipo de cambio pegó un salto.
+
+El 26 de septiembre asume Sandleris en el marco del segundo acuerdo con el FMI y se da por terminado el régimen de metas de inflación para comenzar con uno de crecimiento cero de la base monetaria, con una política cambiaria de bandas muy amplias y móviles. En dicha fecha, la brecha con el tipo de cambio de "equilibrio macroeconómico" era de un 12%, pero nuevamente, la gestión decidió no mantenerlo en ese nivel. El cambio de expectativas ante una modificación en el plantel permitió una nueva apreciación cambiaria, aunque bastante más leve que el período dic-15 y dic-17. Su apogeo se vio el 11 de agosto, donde se generó una apreciación cambiaria producto de algunas encuestas que circulaban con resultados favorables al oficialismo para las PASO, pero la falla fue estrepitosa, el Frente de Todos arrasó en las elecciones. El 14 de agosto el dólar pegó un salto de \$45,25 a \$60, lo que determinó una brecha con un mínimo que no se observaba desde diciembre del 2009. El 1 de septiembre no hubo marcha atrás, y se terminó por implementar un CEPO a la compra de dólares (no podía superar los USD 10.000 mensuales), que se profundizaría el 28 de octubre (USD 200 mensuales).
+
+## Agosto 2019 - Hoy
+
+```{r echo=F, message=FALSE, warning=FALSE}
+htmltools::includeHTML("./output/2019-hoy.html")
+```
+
+Pese a que el nuevo presidente haya declarado en agosto del 2019 que el valor de \$60 "estaba bien", su política cambiaria, como es costumbre desde el 2007, dejó relegado al ITCRM. El contexto internacional no contribuyó en lo absoluto. En marzo del 2020 se desató la pandemia del COVID-19 a nivel global, que trajo como efecto secundario una fuerte devaluación de los principales socios comerciales, que ya había comenzado en mayo 2018. Aunque el yuan y el euro comenzaron una apreciación en junio 2020, el real permaneció en niveles históricamente altos. Sin embargo, el tipo de cambio doméstico demostró una dinámica diferente a la de los socios. La apreciación real entre diciembre-19 y marzo-20 fue compensada hasta agosto 2020, donde retomó su tendencia característica hacia la apreciación.
+
+La brecha no paró de de crecer, tanto por la apreciación real local como por devaluaciones de los socios. La suba de la tasa de la FED iniciada en febrero del 2022 fue catastrófica en este sentido.
+
+Al día de la fecha, la brecha gravita en torno al 80%, niveles similares a los de enero del 2015 y al del régimen de *inflation targeting*. Esta situación, sin reservas netas y con el FMI susurrando al oído, es exclusivamente sostenible bajo un sin fin de restricciones a la adquisición de dólar oficial y al comercio internacional. Nuevamente, no se duda en la utilización de instrumentos como la venta de dólar futuro y bonos con seguros de cambio para controlar las expectativas en un cortísimo plazo a costa de castigar a la futura gestión.
+
+La tradición cambiaria de nuestra historia está condenada al cortoplacismo. Ahora, con las elecciones a meses de distancia, solo queda implorar para que no sople un viento que sacuda el frágil hilo sobre el que nos encontramos.
+
+# A lo entretenido: la matemática por detrás
+
+A partir de los datos publicados por el BCRA, se puede derivar un tipo de cambio que determina un nivel específico del ITCRM. Donde:
+
+$I_t$ es el ITCRM en el momento $t$, y es el objetivo que determinamos a priori.
+
+$I_{j,t}$ es el ITCR bilateral con el país $J$ en el momento $t$.
+
+$w_j$ es la ponderación del país $J$.
+
+$E_{j,dato}$ es el tipo de cambio del país $J$ contra pesos que informa el BCRA. Responde a la pregunta de con cuántos pesos puedo comprar una unidad monetaria del país $J$. $E_{dolar,dato}$ es el tipo de cambio en dólares (mayorista) que brinda el BCRA. $E_{dolar,eq}$ es el tipo de cambio en dólares (mayorista) que haría que el ITCRM sea el buscado. Es el dato que nos interesa encontrar.
+
+$canastas_j$ es la canasta relativa con el país $J$. Sería, según la metodología del ITCRM: $\frac{P_{j,t}}{P_t}$.
+
+Partiendo de la ecuación original:
+
+$$I_t=I_{t-1}\prod_{j}^{N=13}\left(\frac{I_{j,t}}{I_{j,t-1}}\right)^{\frac{w_j}{100}}$$ Primero se calculan las canastas:
+
+$$I_{j,t}=canastas_j*E_{j,dato}$$ Aquí podría testearse el cálculo del ITCRM utilizando las canastas encontradas por residuo.
+
+Ahora, se procede a encontrar al tipo de cambio mayorista que nos deja en el $I_t$ deseado.
+
+$$E_{j,eq}=\frac{E_{j,dato}*E_{dolar,eq}}{E_{dolar,dato}}$$ Juntamos:
+
+$$I_t=I_{t-1}\prod_{j}^{N=13}\left(\frac{canastas_j}{I_{j,t-1}}*\frac{E_{j,dato}*E_{dolar,eq}}{E_{dolar,dato}}\right)^{\frac{w_j}{100}}$$
+
+$$I_t=I_{t-1}\prod_{j}^{N=13}\left(\frac{canastas_j}{I_{j,t-1}}*\frac{E_{j,dato}*E_{dolar,eq}}{E_{dolar,dato}}\right)^{\frac{w_j}{100}}$$ $$\frac{I_t}{I_{t-1}}=\prod_{j}^{N=13}\left(\frac{canastas_j}{I_{j,t-1}}*\frac{E_{j,dato}}{E_{dolar,dato}}\right)^{\frac{w_j}{100}}*\prod_{j}^{N=13}(E_{dolar,eq})^{\frac{w_j}{100}}$$
+
+$$\frac{I_t}{I_{t-1}}*\frac{1}{\prod_{j}^{N=13}\left(\frac{canastas_j}{I_{j,t-1}}*\frac{E_{j,dato}}{E_{dolar,dato}}\right)^{\frac{w_j}{100}}}=\prod_{j}^{N=13}(E_{dolar,eq})^{\frac{w_j}{100}}$$
+
+Como $\sum{w_j}=100$: $$E_{dolar,eq}=\frac{I_t}{I_{t-1}}*\frac{1}{\prod_{j}^{N=13}\left(\frac{canastas_j}{I_{j,t-1}}*\frac{E_{j,dato}}{E_{dolar,dato}}\right)^{\frac{w_j}{100}}}$$
