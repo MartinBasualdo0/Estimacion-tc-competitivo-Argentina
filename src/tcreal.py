@@ -5,6 +5,7 @@ from os.path import exists
 from glob import glob #para eliminar archivos dentro de carpeta
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
 #graficos
@@ -31,9 +32,7 @@ def every_downloads_chrome(driver):
 
 # %%
 #Scrap
-ip_bis='https://www.bis.org/statistics/cp.htm?m=2678'
-ipc_bcra='https://www.bcra.gob.ar/PublicacionesEstadisticas/Principales_variables_datos.asp?serie=7931&detalle=Inflaci%F3n%20mensual%A0(variaci%F3n%20en%20%)'
-indec='https://www.indec.gob.ar/ftp/cuadros/economia/sh_ipc_09_22.xls'
+indec = 'https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31'
 # Descargar los datos de la web
 
 path='./selenium/chromedriver.exe'
@@ -47,14 +46,23 @@ chrome_options.add_experimental_option('prefs', prefs)
 driver = webdriver.Chrome(path,options=chrome_options)
 
 driver.get(indec)
-# ip_indec=driver.find_element(By.XPATH, '/html/body/div[2]/div[1]/div[2]/div[3]/div[2]/div[2]/div/div[2]/div/div[2]/div[3]/div[2]/div/div/a')
-# ip_indec.click()
+
+WebDriverWait(driver, 300).until(EC.presence_of_element_located((By.CLASS_NAME, 'a-color2')))
+xls_div=driver.find_elements(By.CLASS_NAME, 'a-color2')
+hrefs=[]
+for element in xls_div:
+    elemento=element.get_attribute('href')
+    if elemento != None:
+        hrefs.append(elemento)
+ip_indec = hrefs[1]
+driver.get(ip_indec)
 paths = WebDriverWait(driver, 300, 1).until(every_downloads_chrome)
 driver.quit()
 
 
+
 # %%
-ipc_indec=(pd.read_excel('./data/sh_ipc_09_22.xls',skipfooter=5,header=5,sheet_name=2)
+ipc_indec=(pd.read_excel(glob('./data/sh_ipc*')[0],skipfooter=5,header=5,sheet_name=2)
 .T.reset_index()
 .rename({'index':'Período',3:'inflacion'},axis=1))[['Período','inflacion']][1:].reset_index(drop=True)
 ipc_indec.Período=pd.to_datetime(ipc_indec.Período).apply(lambda x: x.strftime('%d/%m/%Y'))

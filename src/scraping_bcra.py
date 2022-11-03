@@ -121,11 +121,12 @@ def get_primera_tabla_actualizada(link=link,ultima_cot=ultima_cot,cod_moneda=lis
     return df
 
 if exists('./data/cotizaciones 1997.xlsx'):
-    for x in range(0,4):
-        try:   
-            cotizaciones_nuevas=get_primera_tabla_actualizada()
+     
+    cotizaciones_nuevas=get_primera_tabla_actualizada()
 
-            for i in range(1,len(lista_cod_monedas)):
+    for i in range(1,len(lista_cod_monedas)):
+        for x in range(0,4):
+            try:  
                 driver.get(link)
                 drop_downs=driver.find_elements(By.CLASS_NAME, "form-control")
 
@@ -148,13 +149,13 @@ if exists('./data/cotizaciones 1997.xlsx'):
                 df[paises[i]]=df[paises[i]].apply(lambda x: float(x.replace(',','.')))
                 cotizaciones_nuevas=cotizaciones_nuevas.merge(df,on='Período')
                 IndexError = None
-        except Exception as IndexError:
-            pass
+            except Exception as IndexError:
+                pass
         
-        if IndexError:
-            sleep(2)
-        else:
-            break
+            if IndexError:
+                sleep(2)
+            else:
+                break
     driver.quit()
     cotizaciones_nuevas.Vietnam=cotizaciones_nuevas.Vietnam/1000
     cotizaciones=pd.concat([cotizaciones,cotizaciones_nuevas]).drop_duplicates('Período').reset_index(drop=True)
