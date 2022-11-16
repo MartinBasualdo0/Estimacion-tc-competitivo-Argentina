@@ -83,10 +83,15 @@ ipc_gral=pd.concat([ipc_geres,ipc_indec])
 # %%
 cotizaciones=pd.read_excel('./output/ITCRM historico.xlsx',sheet_name=2)
 tc=cotizaciones[['Período','Estados Unidos']].rename({'Estados Unidos':'dolar'},axis=1)
-tc
+
+ipc_gral['mes'] = ipc_gral.Período.apply(lambda x: x[3:5])
+ipc_gral['anio'] = ipc_gral.Período.apply(lambda x: x[6:])
+tc['mes'] = tc.Período.apply(lambda x: x[3:5])
+tc['anio'] = tc.Período.apply(lambda x: x[6:])
+tc = tc.groupby(['anio','mes'],as_index=False).mean()
 
 # %%
-deva_real=ipc_gral.merge(tc,on="Período",how='left')
+deva_real=ipc_gral.merge(tc,on=['anio','mes'],how='left')
 deva_real.inflacion=deva_real.inflacion*(100/deva_real.inflacion.iloc[-1])
 deva_real['tc_real_hoy']=deva_real.dolar/deva_real.inflacion*100
 deva_real=deva_real.drop_duplicates('Período')
