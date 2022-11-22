@@ -8,6 +8,7 @@ import os
 from os.path import exists
 from glob import glob #para eliminar archivos dentro de carpeta
 from datetime import datetime
+import xlrd
 # Para scrap
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
@@ -17,8 +18,8 @@ import requests
 from bs4 import BeautifulSoup
 
 # %%
-if exists('./data/ITCRMSerie.xlsx'):
-    os.remove('./data/ITCRMSerie.xlsx')
+if exists('../data/ITCRMSerie.xlsx'):
+    os.remove('../data/ITCRMSerie.xlsx')
 
 # %%
 #Scrap
@@ -26,9 +27,8 @@ link='https://bcra.gob.ar/PublicacionesEstadisticas/Evolucion_moneda.asp'
 itcrm='https://www.bcra.gob.ar/PublicacionesEstadisticas/Indices_tipo_cambio_multilateral.asp'
 # Descargar los datos de la web
 
-path='./selenium/chromedriver.exe'
-# carpeta_descarga=os.getcwd()+'/data'
-carpeta_descarga=os.getcwd()+'\data'
+path='../selenium/chromedriver.exe'
+carpeta_descarga=os.getcwd().replace('jupyter','data')
 #Con getcwd() se encuentra el path absoluto
 
 chrome_options = webdriver.ChromeOptions()
@@ -161,11 +161,12 @@ if exists('./data/cotizaciones 1997.xlsx'):
     cotizaciones=pd.concat([cotizaciones,cotizaciones_nuevas]).drop_duplicates('Período').reset_index(drop=True)
     
 else:
-    for x in range(0,4):
-        try:
-            cotizaciones=get_primera_tabla()
+    for i in range(1,len(lista_cod_monedas)):
+        for x in range(0,4):
+            try:
+                cotizaciones=get_primera_tabla()
 
-            for i in range(1,len(lista_cod_monedas)):
+                
                 driver.get(link)
                 drop_downs=driver.find_elements(By.CLASS_NAME, "form-control")
 
@@ -185,16 +186,17 @@ else:
                 df[paises[i]]=df[paises[i]].apply(lambda x: x.replace(',','.')).astype(float)
                 cotizaciones=cotizaciones.merge(df,on='Período',how='left')
                 IndexError = None
-                
-        except Exception as IndexError:
-            pass
-        
-        if IndexError:
-            sleep(2)
-        else:
-            break
+                    
+            except Exception as IndexError:
+                pass
+            
+            if IndexError:
+                sleep(2)
+            else:
+                break
     driver.quit()
     cotizaciones.Vietnam=cotizaciones.Vietnam/1000
+
     
 
 # %% [markdown]
@@ -217,6 +219,7 @@ monthDates = pd.DataFrame({
     'Período': pd.date_range(start=inicio, end=fin, freq='d').strftime('%d/%m/%Y')
 })
 cotizaciones=monthDates.merge(cotizaciones,how='outer',on='Período')
+# pd.concat([])
 cotizaciones=(cotizaciones.drop_duplicates('Período').reset_index(drop=True)
 )
 
@@ -242,5 +245,10 @@ cotizaciones_usd['mes']=cotizaciones_usd.Período.apply(lambda x: x.month)
 cotizaciones_usd['anio']=cotizaciones_usd.Período.apply(lambda x: x.year)
 cotizaciones_usd
 
+# %%
+writer = pd.ExcelWriter(f'../data/cotizaciones 1997.xlsx', engine='xlsxwriter')
+cotizaciones.to_excel(writer, sheet_name='cotizaciones_ars', index=False)
+cotizaciones_usd.to_excel(writer, sheet_name='cotizaciones_usd', index=False)
+writer.save()
 
 
