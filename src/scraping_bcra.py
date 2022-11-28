@@ -18,8 +18,8 @@ import requests
 from bs4 import BeautifulSoup
 
 # %%
-if exists('../data/ITCRMSerie.xlsx'):
-    os.remove('../data/ITCRMSerie.xlsx')
+if exists('./data/ITCRMSerie.xlsx'):
+    os.remove('./data/ITCRMSerie.xlsx')
 
 # %%
 #Scrap
@@ -27,8 +27,8 @@ link='https://bcra.gob.ar/PublicacionesEstadisticas/Evolucion_moneda.asp'
 itcrm='https://www.bcra.gob.ar/PublicacionesEstadisticas/Indices_tipo_cambio_multilateral.asp'
 # Descargar los datos de la web
 
-path='../selenium/chromedriver.exe'
-carpeta_descarga=os.getcwd().replace('jupyter','data')
+path='./selenium/chromedriver.exe'
+carpeta_descarga=os.getcwd()+'\data'
 #Con getcwd() se encuentra el path absoluto
 
 chrome_options = webdriver.ChromeOptions()
@@ -246,7 +246,7 @@ cotizaciones_usd['anio']=cotizaciones_usd.Período.apply(lambda x: x.year)
 cotizaciones_usd
 
 # %%
-writer = pd.ExcelWriter(f'../data/cotizaciones 1997.xlsx', engine='xlsxwriter')
+writer = pd.ExcelWriter(f'./data/cotizaciones 1997.xlsx', engine='xlsxwriter')
 cotizaciones.to_excel(writer, sheet_name='cotizaciones_ars', index=False)
 cotizaciones_usd.to_excel(writer, sheet_name='cotizaciones_usd', index=False)
 writer.save()
