@@ -8,6 +8,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 #graficos
 import plotly.graph_objects as go
 
@@ -34,8 +36,7 @@ def every_downloads_chrome(driver):
 #Scrap
 indec = 'https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31'
 # Descargar los datos de la web
-
-path='./selenium/chromedriver.exe'
+service = Service(ChromeDriverManager().install())
 carpeta_descarga=os.getcwd()+'\data'
 #Con getcwd() se encuentra el path absoluto
 
@@ -43,7 +44,7 @@ chrome_options = webdriver.ChromeOptions()
 prefs = {'download.default_directory' : carpeta_descarga,
         "directory_upgrade": True}
 chrome_options.add_experimental_option('prefs', prefs)
-driver = webdriver.Chrome(path,options=chrome_options)
+driver = webdriver.Chrome(service=service, options=chrome_options)
 
 driver.get(indec)
 

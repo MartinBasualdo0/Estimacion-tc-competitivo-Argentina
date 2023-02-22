@@ -1,22 +1,20 @@
 # %%
 import pandas as pd
-from datetime import date
-import time
 from time import sleep
 import sys
 import os
 from os.path import exists
 from glob import glob #para eliminar archivos dentro de carpeta
 from datetime import datetime
-import xlrd
 # Para scrap
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
 import requests
+from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
-
+from selenium.webdriver.chrome.service import Service
 # %%
 if exists('./data/ITCRMSerie.xlsx'):
     os.remove('./data/ITCRMSerie.xlsx')
@@ -26,8 +24,7 @@ if exists('./data/ITCRMSerie.xlsx'):
 link='https://bcra.gob.ar/PublicacionesEstadisticas/Evolucion_moneda.asp'
 itcrm='https://www.bcra.gob.ar/PublicacionesEstadisticas/Indices_tipo_cambio_multilateral.asp'
 # Descargar los datos de la web
-
-path='./selenium/chromedriver.exe'
+service = Service(ChromeDriverManager().install())
 carpeta_descarga=os.getcwd()+'\data'
 #Con getcwd() se encuentra el path absoluto
 
@@ -35,7 +32,7 @@ chrome_options = webdriver.ChromeOptions()
 prefs = {'download.default_directory' : carpeta_descarga,
         "directory_upgrade": True}
 chrome_options.add_experimental_option('prefs', prefs)
-driver = webdriver.Chrome(path,options=chrome_options)
+driver = webdriver.Chrome(service=service, options=chrome_options)
 
 driver.get(itcrm)
 itcrm_href=driver.find_element(By.XPATH, '/html/body/div/div[2]/div/div[1]/p[4]/a')

@@ -10,8 +10,6 @@ El presente código es el utilizado para crear los siguientes informes, para má
 
 El uso es sencillo, _app.py_ permite ejecutar los códigos necesarios para exportar los gráficos y tablas utilizadas en los informes. Los códigos se encuentran en la carpeta "src", los archivos exportados, en "output". Para una cuasi-explicación de los pasos realizados en python, la carpeta "jupyter" contiene los jupyter notebooks.
 
-__A tener en cuenta__: se utiliza selenium, por lo que es necesario tener descargado el _chromedriver.exe acorde a la versión de tu google chrome. [https://chromedriver.chromium.org/downloads]()_
-
 ## Librerías
 
 Librerías a instalar en el ambiente:
@@ -21,7 +19,8 @@ Librerías a instalar en el ambiente:
 - selenium
 - beautifulsoup4
 - openpyxl
+- webdriver_manager
 
-Comando: pip install pandas plotly selenium beautifulsoup4 requests openpyxl
+Comando: pip install pandas plotly selenium beautifulsoup4 requests openpyxl webdriver_manager
 
 Cualquier duda, estoy a su disposición
