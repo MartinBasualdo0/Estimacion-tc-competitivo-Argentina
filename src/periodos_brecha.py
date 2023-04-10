@@ -1,22 +1,16 @@
-# %%
 import pandas as pd
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 
-# %%
 df_equilibrio=pd.read_excel('./output/ITCRM historico.xlsx',sheet_name=4)
 itcrm=pd.read_excel('./output/ITCRM historico.xlsx',sheet_name=0)
 
-#Debería verlo con los datos mensuales
-
-# %%
 prom_inicio = itcrm[itcrm.Período == '01/07/2002'].index[0]
 prom_final = itcrm[itcrm.Período == '01/01/2007'].index[0]
 promedio_2002_2007 = itcrm[(itcrm.index >= prom_inicio) & (
-    itcrm.index < prom_final)].mean()[0]
+    itcrm.index < prom_final)].mean(numeric_only=True)[0]
 
-# %%
-def plot_brecha_periodo(df=df_equilibrio, fecha_ini='2003-01-01',fecha_fin=None):
+def plot_brecha(df=df_equilibrio, fecha_ini='2003-01-01',fecha_fin=None):
     idx = df[df.Período ==fecha_ini].index[0]
     df = df[df.index >= idx].reset_index(drop=True)
     if fecha_fin: 
@@ -43,7 +37,7 @@ def plot_brecha_periodo(df=df_equilibrio, fecha_ini='2003-01-01',fecha_fin=None)
         title_text="Cotizaciones", secondary_y=False, zeroline=False)
     cotizaciones_plot.update_yaxes(
         title_text="Brecha (devaluación requerida)", tickformat=',.0%', secondary_y=True)
-    cotizaciones_plot.update_layout(separators=",.", font_family="Georgia",
+    cotizaciones_plot.update_layout(separators=",.", font_family="georgia",
                                     margin ={'b': 50,'l':50,'r':15},
                                     height=600, width=900,
                                     template='none',
@@ -66,7 +60,7 @@ def plot_brecha_periodo(df=df_equilibrio, fecha_ini='2003-01-01',fecha_fin=None)
         if fecha_ini<2016 and fecha_fin>2015:cotizaciones_plot.add_vline(x="2015-12-17", line_width=1, line_dash="dash", line_color="Black",opacity=0.5)
         if fecha_ini<2018 and fecha_fin>2018:cotizaciones_plot.add_vline(x="2018-09-26", line_width=1, line_dash="dash", line_color="Black",opacity=0.5)
         if fecha_ini<2020 and fecha_fin>2019:cotizaciones_plot.add_vline(x="2019-09-01", line_width=1, line_dash="dash", line_color="Black",opacity=0.5)
-        if fecha_ini<2004 and fecha_fin>2004:cotizaciones_plot.add_annotation(showarrow=False, text=f'TC competitivo y estable<br>"Crawling peg"',
+        if fecha_ini<2004 and fecha_fin>2004:cotizaciones_plot.add_annotation(showarrow=False, text=f'TC "competitivo y estable"',
             font=dict(size=13), font_family="georgia", xref='paper', yref='paper', x=0.5, y=0.8)
         if fecha_ini<2009 and fecha_fin>2009:cotizaciones_plot.add_annotation(showarrow=False, text=f'Apreciación cambiaria<br>Inicio intervención INDEC',
             font=dict(size=13), font_family="georgia", x='2009-7-1', y=5.55)
@@ -99,31 +93,24 @@ def plot_brecha_periodo(df=df_equilibrio, fecha_ini='2003-01-01',fecha_fin=None)
     return cotizaciones_plot
 
 
-# %%
-plot_brecha_periodo(fecha_ini='2019-6-15'
-            )
-
-# %%
-plot_brecha_periodo(fecha_ini='2003-01-01',
+def main():
+    plot_brecha(fecha_ini='2003-01-01',
             fecha_fin='2007-03-01'
             ).write_html('./output/2003-2007.html')
 
-plot_brecha_periodo(fecha_ini='2006-9-01',
-            fecha_fin='2012-3-01'
-            ).write_html('./output/2006-2012.html')
+    plot_brecha(fecha_ini='2006-9-01',
+                fecha_fin='2012-3-01'
+                ).write_html('./output/2006-2012.html')
 
 
-plot_brecha_periodo(fecha_ini='2011-09-01',
-            fecha_fin='2016-03-01',
-            ).write_html('./output/2011-2016.html')
+    plot_brecha(fecha_ini='2011-09-01',
+                fecha_fin='2016-03-01',
+                ).write_html('./output/2011-2016.html')
 
-plot_brecha_periodo(fecha_ini='2015-10-15',
-            fecha_fin='2020-1-01',
-            ).write_html('./output/2015-2020.html')
+    plot_brecha(fecha_ini='2015-10-15',
+                fecha_fin='2020-1-01',
+                ).write_html('./output/2015-2020.html')
 
-plot_brecha_periodo(fecha_ini='2019-6-15'
-            ).write_html('./output/2019-hoy.html')
-
-
-
+    plot_brecha(fecha_ini='2019-6-15'
+                ).write_html('./output/2019-hoy.html')
 

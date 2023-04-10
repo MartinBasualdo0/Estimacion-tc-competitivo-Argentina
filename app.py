@@ -1,9 +1,16 @@
-# Ejecutar todos los códigos. El resultado se ve en la carpeta "output"
-import subprocess
+print("Inicio del programa. Duración aproximada: 4 minutos")
+import src.scraping_bcra as sbcra
+import src.brecha as bre
+import src.periodos_brecha as pbre
+import src.tcreal as tcr
 
-program_list = ['scraping_bcra.py','brecha.py','tcreal.py','periodos_brecha.py']
-
-for program in program_list:
-    subprocess.call(['python', f'./src/{program}'])
-    print("Finished:" + program)
+sbcra.main()
+print("Scrap BCRA terminado")
+bre.main()
+print("Brecha terminado")
+pbre.main()
+print("Períodos brecha terminado")
+tcr.main()
+print("Terminado tipo de cambio real")
+print("Programa terminado")
     
