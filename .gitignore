@@ -17,3 +17,5 @@ pruebas/alphacast.ipynb
 data/cotizaciones 1997.xlsx
 data/cotizaciones 1997.xlsx
 data/ITCRMSerie.xlsx
+venv/
+src/__pycache__/

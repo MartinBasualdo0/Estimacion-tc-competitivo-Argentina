@@ -62,7 +62,8 @@ def plot_indice_monedas(df:pd.DataFrame=cotizaciones_usd, anio_desde:str="2007",
     fig = go.Figure()
     for pais,cotizacion in dict_paises_importantes.items():
         fig.add_trace(go.Scatter(x = df.index, y = df[pais], name = cotizacion))
-    fig.update_layout(template = None,font_family="georgia",title_text = "Evolución de las monedas de los tres principales socios comerciales<br><sup>índice simple con base 2019=100")
+    fig.update_layout(template = None,font_family="georgia",title_text = "Evolución de las monedas de los tres principales socios comerciales<br><sup>índice simple con base 2019=100",
+                      height=600, width=900,)
     note = 'Fuente: BCRA'
     fig.add_annotation(showarrow=False, text=note, font=dict(size=12), xref='paper', x=0.1, yref='paper', y=-0.1,
                                      xanchor='right', yanchor='auto', xshift=0, yshift=0,)
