@@ -2,15 +2,15 @@ import pandas as pd
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 
-df_equilibrio=pd.read_excel('./output/ITCRM historico.xlsx',sheet_name=4)
-itcrm=pd.read_excel('./output/ITCRM historico.xlsx',sheet_name=0)
+# df_equilibrio=pd.read_excel('./output/ITCRM historico.xlsx',sheet_name=4)
+# itcrm=pd.read_excel('./output/ITCRM historico.xlsx',sheet_name=0)
 
-prom_inicio = itcrm[itcrm.Período == '01/07/2002'].index[0]
-prom_final = itcrm[itcrm.Período == '01/01/2007'].index[0]
-promedio_2002_2007 = itcrm[(itcrm.index >= prom_inicio) & (
-    itcrm.index < prom_final)].mean(numeric_only=True)[0]
+# prom_inicio = itcrm[itcrm.Período == '01/07/2002'].index[0]
+# prom_final = itcrm[itcrm.Período == '01/01/2007'].index[0]
+# promedio_2002_2007 = itcrm[(itcrm.index >= prom_inicio) & (
+#     itcrm.index < prom_final)].mean(numeric_only=True)[0]
 
-def plot_brecha(df=df_equilibrio, fecha_ini='2003-01-01',fecha_fin=None):
+def plot_brecha(df:pd.DataFrame, promedio:int,fecha_ini='2003-01-01',fecha_fin=None):
     idx = df[df.Período ==fecha_ini].index[0]
     df = df[df.index >= idx].reset_index(drop=True)
     if fecha_fin: 
@@ -41,7 +41,7 @@ def plot_brecha(df=df_equilibrio, fecha_ini='2003-01-01',fecha_fin=None):
                                     margin ={'b': 50,'l':50,'r':15},
                                     height=600, width=900,
                                     template='none',
-                                    title_text=f"Tipo de cambio nominal de equilibrio macroeconómico {str(fecha_ini[:4])}-{str(ultima_fecha.year)}<br><sup>Tipo de cambio que dejaría al ITCRM igual al promedio jul/02-dic/06: {str(round(promedio_2002_2007,1)).replace('.',',')}",
+                                    title_text=f"Tipo de cambio nominal de equilibrio macroeconómico {str(fecha_ini[:4])}-{str(ultima_fecha.year)}<br><sup>Tipo de cambio que dejaría al ITCRM igual al promedio jul/02-dic/06: {str(round(promedio,1)).replace('.',',')}",
                                     title_font=dict(size=20),
                                     legend=dict(yanchor="top", y=1.05, xanchor="left", x=0.15, orientation='h'))
 
@@ -94,23 +94,30 @@ def plot_brecha(df=df_equilibrio, fecha_ini='2003-01-01',fecha_fin=None):
 
 
 def main():
-    plot_brecha(fecha_ini='2003-01-01',
+    df_equilibrio=pd.read_excel('./output/ITCRM historico.xlsx',sheet_name=4)
+    itcrm=pd.read_excel('./output/ITCRM historico.xlsx',sheet_name=0)
+
+    prom_inicio = itcrm[itcrm.Período == '01/07/2002'].index[0]
+    prom_final = itcrm[itcrm.Período == '01/01/2007'].index[0]
+    promedio_2002_2007 = itcrm[(itcrm.index >= prom_inicio) & (
+    itcrm.index < prom_final)].mean(numeric_only=True)[0]
+    plot_brecha(df_equilibrio, promedio_2002_2007,fecha_ini='2003-01-01',
             fecha_fin='2007-03-01'
             ).write_html('./output/2003-2007.html')
 
-    plot_brecha(fecha_ini='2006-9-01',
+    plot_brecha(df_equilibrio, promedio_2002_2007,fecha_ini='2006-9-01',
                 fecha_fin='2012-3-01'
                 ).write_html('./output/2006-2012.html')
 
 
-    plot_brecha(fecha_ini='2011-09-01',
+    plot_brecha(df_equilibrio, promedio_2002_2007,fecha_ini='2011-09-01',
                 fecha_fin='2016-03-01',
                 ).write_html('./output/2011-2016.html')
 
-    plot_brecha(fecha_ini='2015-10-15',
+    plot_brecha(df_equilibrio, promedio_2002_2007,fecha_ini='2015-10-15',
                 fecha_fin='2020-1-01',
                 ).write_html('./output/2015-2020.html')
 
-    plot_brecha(fecha_ini='2019-6-15'
+    plot_brecha(df_equilibrio, promedio_2002_2007,fecha_ini='2019-6-15'
                 ).write_html('./output/2019-hoy.html')
 
