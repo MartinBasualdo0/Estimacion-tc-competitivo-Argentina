@@ -3,15 +3,6 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from src.constants import dict_paises_importantes
 
-cotizaciones_excel = pd.read_excel('./data/cotizaciones 1997.xlsx', sheet_name=[0,1], index_col=0)
-cotizaciones=cotizaciones_excel[0]
-cotizaciones_usd = cotizaciones_excel[1]
-itcrm_excel = pd.read_excel('./data/ITCRMSerie.xlsx', header=1, skipfooter=4, index_col="Período", sheet_name=[0, 2])
-itcrm = itcrm_excel[0]
-ponderadores = itcrm_excel[2]
-itcrm.index = pd.to_datetime(itcrm.index, format='%d/%m/%Y')
-ponderadores.index = pd.to_datetime(ponderadores.index, format='%d/%m/%Y')
-
 def get_variacion_anualizada_tc(cotizaciones_usd:pd.DataFrame):
     monthly_cotizaciones_usd = cotizaciones_usd.groupby(pd.Grouper(freq='M')).mean()
     var_cotizaciones_usd = (monthly_cotizaciones_usd.pct_change(1)+1)**(365/30)-1
@@ -24,12 +15,12 @@ def get_indice_simple(cotizaciones_usd: pd.DataFrame, anio_base: str = '2019'):
     df = df * 100
     return df
 
-def plot_variacion_anualizada_tc(df:pd.DataFrame=cotizaciones_usd, anio_desde:str="2019", mes_desde:str='01'):
-    df = get_variacion_anualizada_tc(df)
-    df = df[f'{anio_desde}-{mes_desde}':]
+def plot_variacion_anualizada_tc(cotizaciones_usd:pd.DataFrame, anio_desde:str="2019", mes_desde:str='01'):
+    cotizaciones_usd = get_variacion_anualizada_tc(cotizaciones_usd)
+    cotizaciones_usd = cotizaciones_usd[f'{anio_desde}-{mes_desde}':]
     fig = go.Figure()
     for pais,cotizacion in dict_paises_importantes.items():
-        fig.add_trace(go.Scatter(x = df.index, y = df[pais], name = cotizacion))
+        fig.add_trace(go.Scatter(x = cotizaciones_usd.index, y = cotizaciones_usd[pais], name = cotizacion))
     fig.update_layout(template = None, font_family="georgia", title_text = "Variación mensual anualizada del tc de los 3 principales socios comerciales")
     fig.update_yaxes(range=(-1,3), tickformat = ".2%")
     note = 'Fuente: BCRA'
@@ -41,11 +32,11 @@ def plot_variacion_anualizada_tc(df:pd.DataFrame=cotizaciones_usd, anio_desde:st
                                      xref='paper', yref='paper', x=0.5, y=0.5)
     return fig
 
-def plot_evolucion_monedas(df:pd.DataFrame=cotizaciones_usd, anio_desde:str="2007",mes_desde:str="01"):
-    df = df[f'{anio_desde}-{mes_desde}':]
+def plot_evolucion_monedas(cotizaciones_usd:pd.DataFrame, anio_desde:str="2007",mes_desde:str="01"):
+    cotizaciones_usd = cotizaciones_usd[f'{anio_desde}-{mes_desde}':]
     fig = go.Figure()
     for pais,cotizacion in dict_paises_importantes.items():
-        fig.add_trace(go.Scatter(x = df.index, y = df[pais], name = cotizacion))
+        fig.add_trace(go.Scatter(x = cotizaciones_usd.index, y = cotizaciones_usd[pais], name = cotizacion))
     fig.update_layout(template = None,font_family="georgia", title_text = "Evolución de las monedas de los tres principales socios comerciales")
     note = 'Fuente: BCRA'
     fig.add_annotation(showarrow=False, text=note, font=dict(size=12), xref='paper', x=0.1, yref='paper', y=-0.1,
@@ -56,12 +47,12 @@ def plot_evolucion_monedas(df:pd.DataFrame=cotizaciones_usd, anio_desde:str="200
                                      xref='paper', yref='paper', x=0.5, y=0.5)
     return fig
 
-def plot_indice_monedas(df:pd.DataFrame=cotizaciones_usd, anio_desde:str="2007",mes_desde:str="01", anio_base:str = "2019"):
-    df = get_indice_simple(df, anio_base=anio_base)
-    df = df[f'{anio_desde}-{mes_desde}':]
+def plot_indice_monedas(cotizaciones_usd:pd.DataFrame, anio_desde:str="2007",mes_desde:str="01", anio_base:str = "2019"):
+    cotizaciones_usd = get_indice_simple(cotizaciones_usd, anio_base=anio_base)
+    cotizaciones_usd = cotizaciones_usd[f'{anio_desde}-{mes_desde}':]
     fig = go.Figure()
     for pais,cotizacion in dict_paises_importantes.items():
-        fig.add_trace(go.Scatter(x = df.index, y = df[pais], name = cotizacion))
+        fig.add_trace(go.Scatter(x = cotizaciones_usd.index, y = cotizaciones_usd[pais], name = cotizacion))
     fig.update_layout(template = None,font_family="georgia",title_text = "Evolución de las monedas de los tres principales socios comerciales<br><sup>índice simple con base 2019=100",
                       height=600, width=900,)
     note = 'Fuente: BCRA'
@@ -88,8 +79,9 @@ def plot_evolucion_ponderadores(ponderadores:pd.DataFrame):
                                         xref='paper', yref='paper', x=0.5, y=0.5)
     return fig
 
-def plot_brecha(anio_desde='2003', mes_desde='01'):
-    tc_equilibrio = get_tc_equilibrio(itcrm)
+def plot_brecha(itcrm:pd.DataFrame,cotizaciones:pd.DataFrame,ponderadores:pd.DataFrame,
+                anio_desde='2003', mes_desde='01'):
+    tc_equilibrio = get_tc_equilibrio(itcrm, cotizaciones, ponderadores)
     itcr_objetivo = get_promedio_2002_2007(itcrm)
     df = tc_equilibrio.copy()
     df = df[f'{str(anio_desde)}-{str(mes_desde)}':]
@@ -163,22 +155,22 @@ def plot_brecha(anio_desde='2003', mes_desde='01'):
     return cotizaciones_plot
 
 
-def get_ponderaciones_diarias(ponderadores:pd.DataFrame):
+def get_ponderaciones_diarias(ponderadores:pd.DataFrame, itcrm:pd.DataFrame):
     ponderadores_diario = ponderadores.copy()
     ponderadores_diario = ponderadores_diario.resample('D').ffill()
     ponderadores_diario = ponderadores_diario.merge(itcrm.index.to_frame(), left_index=True, right_index=True, how="right")
     ponderadores_diario = ponderadores_diario.fillna(method='ffill').drop("Período",axis=1)
     return ponderadores_diario
 
-def get_cotizaciones_diarias(cotizaciones:pd.DataFrame):
+def get_cotizaciones_diarias(cotizaciones:pd.DataFrame, itcrm:pd.DataFrame):
     cotizaciones_final = cotizaciones.copy()
     cotizaciones_final = cotizaciones_final.drop_duplicates()
     cotizaciones_final = cotizaciones_final.merge(itcrm.index.to_frame(), left_index=True, right_index=True, how="right")
     cotizaciones_final = cotizaciones_final.fillna(method='ffill').drop("Período",axis=1)
     return cotizaciones_final
 
-def get_canastas():
-    df = get_cotizaciones_diarias(cotizaciones)
+def get_canastas(cotizaciones:pd.DataFrame, itcrm:pd.DataFrame):
+    df = get_cotizaciones_diarias(cotizaciones, itcrm)
     canastas = df.copy()
 
     for i,pais in enumerate(df.columns):
@@ -186,10 +178,10 @@ def get_canastas():
             df[pais]
     return canastas
 
-def get_productoria_original(itcrm:pd.DataFrame):
-    cotizaciones_final = get_cotizaciones_diarias(cotizaciones)
-    canastas = get_canastas()
-    ponderadores_diario = get_ponderaciones_diarias(ponderadores)
+def get_productoria_original(itcrm:pd.DataFrame, cotizaciones:pd.DataFrame, ponderadores:pd.DataFrame):
+    cotizaciones_final = get_cotizaciones_diarias(cotizaciones, itcrm)
+    canastas = get_canastas(cotizaciones, itcrm)
+    ponderadores_diario = get_ponderaciones_diarias(ponderadores, itcrm)
     productoria_original = pd.DataFrame()
     productoria_original.index = itcrm.index
 
@@ -206,10 +198,10 @@ def get_productoria_original(itcrm:pd.DataFrame):
     productoria_original = productoria_original.dropna()
     return productoria_original
 
-def get_productoria_equilibrio(itcrm:pd.DataFrame):
-    canastas = get_canastas()
-    cotizaciones_final = get_cotizaciones_diarias(cotizaciones)
-    ponderadores_diario = get_ponderaciones_diarias(ponderadores)
+def get_productoria_equilibrio(itcrm:pd.DataFrame, cotizaciones:pd.DataFrame, ponderadores:pd.DataFrame):
+    canastas = get_canastas(cotizaciones, itcrm)
+    cotizaciones_final = get_cotizaciones_diarias(cotizaciones, itcrm)
+    ponderadores_diario = get_ponderaciones_diarias(ponderadores, itcrm)
     productoria_equilibrio = pd.DataFrame()
     productoria_equilibrio.index = itcrm.index
 
@@ -229,10 +221,10 @@ def get_promedio_2002_2007(itcrm:pd.DataFrame):
     promedio_2002_2007 = itcrm['2002-07-01':'2007-01-01'][itcrm.columns[0]].mean()
     return promedio_2002_2007
 
-def get_tc_equilibrio(itcrm:pd.DataFrame):
-    productoria_equilibrio = get_productoria_equilibrio(itcrm)
+def get_tc_equilibrio(itcrm:pd.DataFrame, cotizaciones:pd.DataFrame, ponderadores:pd.DataFrame):
+    productoria_equilibrio = get_productoria_equilibrio(itcrm, cotizaciones, ponderadores)
     itcr_buscado = get_promedio_2002_2007(itcrm)
-    cotizaciones_final = get_cotizaciones_diarias(cotizaciones)
+    cotizaciones_final = get_cotizaciones_diarias(cotizaciones, itcrm)
     tc_equilibrio = pd.DataFrame()
     tc_equilibrio.index = itcrm.index
 
@@ -247,13 +239,13 @@ def get_tc_equilibrio(itcrm:pd.DataFrame):
     tc_equilibrio = tc_equilibrio.dropna()
     return tc_equilibrio
 
-def writer_brecha_itcrm():
-    ponderadores_diario = get_ponderaciones_diarias(ponderadores)
-    cotizaciones_final = get_cotizaciones_diarias(cotizaciones)
-    canastas = get_canastas()
-    productoria_original = get_productoria_original(itcrm)
-    productoria_equilibrio = get_productoria_equilibrio(itcrm)
-    tc_equilibrio = get_tc_equilibrio(itcrm)
+def writer_brecha_itcrm(ponderadores:pd.DataFrame, cotizaciones:pd.DataFrame, itcrm:pd.DataFrame):
+    ponderadores_diario = get_ponderaciones_diarias(ponderadores, itcrm)
+    cotizaciones_final = get_cotizaciones_diarias(cotizaciones, itcrm)
+    canastas = get_canastas(cotizaciones, itcrm)
+    productoria_original = get_productoria_original(itcrm,cotizaciones, ponderadores)
+    productoria_equilibrio = get_productoria_equilibrio(itcrm, cotizaciones, ponderadores)
+    tc_equilibrio = get_tc_equilibrio(itcrm, cotizaciones, ponderadores)
     
     writer = pd.ExcelWriter(f'./output/ITCRM historico.xlsx', engine='xlsxwriter')
     itcrm.to_excel(writer, sheet_name='ITCRM', index=True)
@@ -267,9 +259,19 @@ def writer_brecha_itcrm():
     writer.close()
 
 def main():
-    writer_brecha_itcrm()     
-    plot_brecha(anio_desde="2003").write_html('./output/grafico_brecha.html')
-    plot_indice_monedas(anio_desde='2019').write_html('./output/indice_monedas.html')
-    plot_variacion_anualizada_tc(df=cotizaciones_usd).write_html('./output/grafico_devaluacion_socios.html')
+    
+    cotizaciones_excel = pd.read_excel('./data/cotizaciones 1997.xlsx', sheet_name=[0,1], index_col=0)
+    cotizaciones=cotizaciones_excel[0]
+    cotizaciones_usd = cotizaciones_excel[1]
+    itcrm_excel = pd.read_excel('./data/ITCRMSerie.xlsx', header=1, skipfooter=4, index_col="Período", sheet_name=[0, 2])
+    itcrm = itcrm_excel[0]
+    ponderadores = itcrm_excel[2]
+    itcrm.index = pd.to_datetime(itcrm.index, format='%d/%m/%Y')
+    ponderadores.index = pd.to_datetime(ponderadores.index, format='%d/%m/%Y')
+
+    writer_brecha_itcrm(ponderadores, cotizaciones, itcrm)     
+    plot_brecha(itcrm,cotizaciones,ponderadores,anio_desde="2003").write_html('./output/grafico_brecha.html')
+    plot_indice_monedas(cotizaciones_usd,anio_desde='2019').write_html('./output/indice_monedas.html')
+    plot_variacion_anualizada_tc(cotizaciones_usd).write_html('./output/grafico_devaluacion_socios.html')
     print("Terminado cálculo de la brecha")
 
