@@ -13,7 +13,7 @@ output/grafico_brecha.html
 output/Tc a precios de hoy.xlsx
 output/ITCRM historico.xlsx
 tc-competitivo-y-estable.Rmd
-pruebas/alphacast.ipynb
+pruebas/clave_api_alphacast.py
 data/cotizaciones 1997.xlsx
 data/cotizaciones 1997.xlsx
 data/ITCRMSerie.xlsx
