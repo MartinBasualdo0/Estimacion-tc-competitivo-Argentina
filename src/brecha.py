@@ -128,17 +128,17 @@ def plot_brecha(itcrm:pd.DataFrame,cotizaciones:pd.DataFrame,ponderadores:pd.Dat
     if anio_desde<2019:cotizaciones_plot.add_vline(x="2018-09-26", line_width=1, line_dash="dash", line_color="Black",opacity=0.5)
     if anio_desde<2020:cotizaciones_plot.add_vline(x="2019-09-01", line_width=1, line_dash="dash", line_color="Black",opacity=0.5)
     if anio_desde<2004:cotizaciones_plot.add_annotation(showarrow=False, text=f'TC "competitivo y estable"',
-        font=dict(size=13), font_family="georgia",x='2004-12-1', y=75)
+        font=dict(size=13), font_family="georgia",x='2004-12-1', y=200)
     if anio_desde<2009:cotizaciones_plot.add_annotation(showarrow=False, text=f'Apreciación cambiaria<br>Inicio intervención INDEC',
-        font=dict(size=13), font_family="georgia",x='2009-7-1', y=200)
+        font=dict(size=13), font_family="georgia",x='2009-7-1', y=300)
     if anio_desde<2013:cotizaciones_plot.add_annotation(showarrow=False, text=f'CEPO cambiario<br>INDEC intervenido',
-        font=dict(size=13), font_family="georgia",x='2013-11-1', y=330)
+        font=dict(size=13), font_family="georgia",x='2013-11-1', y=600)
     if anio_desde<2017:cotizaciones_plot.add_annotation(showarrow=False, text=f'TC flotante<br>"Flotación sucia"',
-        font=dict(size=13), font_family="georgia",x='2017-5-1', y=75)
+        font=dict(size=13), font_family="georgia",x='2017-5-1', y=200)
     if anio_desde<2019:cotizaciones_plot.add_annotation(showarrow=False, text=f"Bandas cambiarias",
-        font=dict(size=13), font_family="georgia",x='2019-03-1', y=200,textangle=90)
+        font=dict(size=13), font_family="georgia",x='2019-03-1', y=600,textangle=90)
     if anio_desde<2021:cotizaciones_plot.add_annotation(showarrow=False, text=f'Apreciación cambiaria<br>Con CEPO',
-        font=dict(size=13), font_family="georgia",x='2021-9-1', y=50) 
+        font=dict(size=13), font_family="georgia",x='2021-9-1', y=600) 
     
     # Nota al pie
     note = 'Fuente: BCRA'
@@ -151,7 +151,7 @@ def plot_brecha(itcrm:pd.DataFrame,cotizaciones:pd.DataFrame,ponderadores:pd.Dat
 
     cotizaciones_plot.add_annotation(showarrow=False, text=f"Devaluación requerida al {ultima_fecha.strftime('%d/%m/%y')}:<br>{'{:.1%}'.format(ultima_brecha).replace('.',',')}", font=dict(size=14), font_family="georgia",
                                      # xref='paper', yref='paper',
-                                     x='2019-05-30', y=300)
+                                     x='2019-05-30', y=700)
     return cotizaciones_plot
 
 
