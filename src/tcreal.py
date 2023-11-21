@@ -8,6 +8,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 import plotly.graph_objects as go
 import src.constants as cs    
 import src.scrap as scrap
+import time
 
 def scrap_ipc(driver):
     try: 
@@ -23,7 +24,9 @@ def scrap_ipc(driver):
             hrefs.append(elemento)
     ip_indec = hrefs[0]
     driver.get(ip_indec)
-    paths = WebDriverWait(driver, 300, 1).until(scrap.every_downloads_chrome)
+    # paths = WebDriverWait(driver, 300, 1).until(scrap.every_downloads_chrome)
+    scrap.wait_for_downloads_to_complete(timeout=100)
+    time.sleep(10)
     driver.quit()
     
 def get_ipc_gral():
