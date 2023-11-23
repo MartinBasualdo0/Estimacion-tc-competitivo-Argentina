@@ -136,7 +136,7 @@ def plot_brecha(itcrm:pd.DataFrame,cotizaciones:pd.DataFrame,ponderadores:pd.Dat
     if anio_desde<2017:cotizaciones_plot.add_annotation(showarrow=False, text=f'TC flotante<br>"Flotación sucia"',
         font=dict(size=13), font_family="georgia",x='2017-5-1', y=200)
     if anio_desde<2019:cotizaciones_plot.add_annotation(showarrow=False, text=f"Bandas cambiarias",
-        font=dict(size=13), font_family="georgia",x='2019-03-1', y=600,textangle=90)
+        font=dict(size=13), font_family="georgia",x='2019-03-1', y=400,textangle=90)
     if anio_desde<2021:cotizaciones_plot.add_annotation(showarrow=False, text=f'Apreciación cambiaria<br>Con CEPO',
         font=dict(size=13), font_family="georgia",x='2021-9-1', y=600) 
     
