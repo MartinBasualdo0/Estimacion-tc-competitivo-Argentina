@@ -78,7 +78,7 @@ def devaluacion_real_plot():
                                     margin ={'b': 70,'l':50,'r':15},
                                     height=600, width=900,
                                     template='none',
-                                    title_text=f"Evolución del tipo de cambio (real)<br>A pesos del {ultimo_mes}",
+                                    title_text=f"Evolución del tipo de cambio ajustado por IPC<br>A pesos del {ultimo_mes}",
                                     legend=dict(yanchor="top", y=1.05, xanchor="left", x=0.36, orientation='h'))
 
     note = 'Fuente: BCRA, INDEC, GERES'
