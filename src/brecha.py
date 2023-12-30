@@ -79,10 +79,10 @@ def plot_evolucion_ponderadores(ponderadores:pd.DataFrame):
                                         xref='paper', yref='paper', x=0.5, y=0.5)
     return fig
 
-def plot_brecha(itcrm:pd.DataFrame,cotizaciones:pd.DataFrame,ponderadores:pd.DataFrame,
+def plot_brecha(itcrm:pd.DataFrame,cotizaciones:pd.DataFrame,ponderadores:pd.DataFrame, itcr_objetivo:float,
                 anio_desde='2003', mes_desde='01'):
-    tc_equilibrio = get_tc_equilibrio(itcrm, cotizaciones, ponderadores)
-    itcr_objetivo = get_promedio_2002_2007(itcrm)
+    tc_equilibrio = get_tc_equilibrio(itcrm, cotizaciones, ponderadores,itcr_objetivo)
+    # itcr_objetivo = get_promedio_2002_2007(itcrm)
     df = tc_equilibrio.copy()
     df = df[f'{str(anio_desde)}-{str(mes_desde)}':]
     x = df.index
@@ -221,9 +221,9 @@ def get_promedio_2002_2007(itcrm:pd.DataFrame):
     promedio_2002_2007 = itcrm['2002-07-01':'2007-01-01'][itcrm.columns[0]].mean()
     return promedio_2002_2007
 
-def get_tc_equilibrio(itcrm:pd.DataFrame, cotizaciones:pd.DataFrame, ponderadores:pd.DataFrame):
+def get_tc_equilibrio(itcrm:pd.DataFrame, cotizaciones:pd.DataFrame, ponderadores:pd.DataFrame, itcr_objetivo:float):
     productoria_equilibrio = get_productoria_equilibrio(itcrm, cotizaciones, ponderadores)
-    itcr_buscado = get_promedio_2002_2007(itcrm)
+    # itcr_objetivo = get_promedio_2002_2007(itcrm)
     cotizaciones_final = get_cotizaciones_diarias(cotizaciones, itcrm)
     tc_equilibrio = pd.DataFrame()
     tc_equilibrio.index = itcrm.index
@@ -231,7 +231,7 @@ def get_tc_equilibrio(itcrm:pd.DataFrame, cotizaciones:pd.DataFrame, ponderadore
     tc_equilibrio['tc_equilibrio'] = 1 / \
         (productoria_equilibrio.productoria
         *itcrm['ITCRM '].shift()
-        /itcr_buscado)
+        /itcr_objetivo)
     tc_equilibrio['tc_oficial_mayorista'] = cotizaciones_final["Estados Unidos"]
     tc_equilibrio['brecha'] = tc_equilibrio.tc_equilibrio / \
         tc_equilibrio.tc_oficial_mayorista-1
@@ -239,13 +239,13 @@ def get_tc_equilibrio(itcrm:pd.DataFrame, cotizaciones:pd.DataFrame, ponderadore
     tc_equilibrio = tc_equilibrio.dropna()
     return tc_equilibrio
 
-def writer_brecha_itcrm(ponderadores:pd.DataFrame, cotizaciones:pd.DataFrame, itcrm:pd.DataFrame):
+def writer_brecha_itcrm(ponderadores:pd.DataFrame, cotizaciones:pd.DataFrame, itcrm:pd.DataFrame,itcr_objetivo:float):
     ponderadores_diario = get_ponderaciones_diarias(ponderadores, itcrm)
     cotizaciones_final = get_cotizaciones_diarias(cotizaciones, itcrm)
     canastas = get_canastas(cotizaciones, itcrm)
     productoria_original = get_productoria_original(itcrm,cotizaciones, ponderadores)
     productoria_equilibrio = get_productoria_equilibrio(itcrm, cotizaciones, ponderadores)
-    tc_equilibrio = get_tc_equilibrio(itcrm, cotizaciones, ponderadores)
+    tc_equilibrio = get_tc_equilibrio(itcrm, cotizaciones, ponderadores, itcr_objetivo)
     
     writer = pd.ExcelWriter(f'./output/ITCRM historico.xlsx', engine='xlsxwriter')
     itcrm.to_excel(writer, sheet_name='ITCRM', index=True)
@@ -259,7 +259,7 @@ def writer_brecha_itcrm(ponderadores:pd.DataFrame, cotizaciones:pd.DataFrame, it
     writer.close()
 
 def main():
-    
+    # itcr_objetivo = 113.33
     cotizaciones_excel = pd.read_excel('./data/cotizaciones 1997.xlsx', sheet_name=[0,1], index_col=0)
     cotizaciones=cotizaciones_excel[0]
     cotizaciones_usd = cotizaciones_excel[1]
@@ -268,9 +268,10 @@ def main():
     ponderadores = itcrm_excel[2]
     itcrm.index = pd.to_datetime(itcrm.index, format='%d/%m/%Y')
     ponderadores.index = pd.to_datetime(ponderadores.index, format='%d/%m/%Y')
+    itcr_objetivo = get_promedio_2002_2007(itcrm) # O cualquier otro
 
-    writer_brecha_itcrm(ponderadores, cotizaciones, itcrm)     
-    plot_brecha(itcrm,cotizaciones,ponderadores,anio_desde="2003").write_html('./output/grafico_brecha.html')
+    writer_brecha_itcrm(ponderadores, cotizaciones, itcrm, itcr_objetivo)     
+    plot_brecha(itcrm,cotizaciones,ponderadores,anio_desde="2003",itcr_objetivo=itcr_objetivo).write_html('./output/grafico_brecha.html')
     plot_indice_monedas(cotizaciones_usd,anio_desde='2019').write_html('./output/indice_monedas.html')
     plot_variacion_anualizada_tc(cotizaciones_usd).write_html('./output/grafico_devaluacion_socios.html')
     print("Terminado cálculo de la brecha")
