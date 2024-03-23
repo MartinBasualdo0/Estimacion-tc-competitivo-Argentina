@@ -46,13 +46,13 @@ def get_ipc_gral():
     ipc_gral = pd.concat([ipc_geres,ipc_indec])
     ipc_gral.Período = pd.to_datetime(ipc_gral.Período, format="%d/%m/%Y")
     ipc_gral = ipc_gral.set_index("Período")
-    ipc_gral = ipc_gral.resample('ME').mean()
+    ipc_gral = ipc_gral.resample('M').mean()
     return ipc_gral
 
 def get_tc_mensual():
     cotizaciones=pd.read_excel('./output/ITCRM historico.xlsx',sheet_name=2,index_col=0)
     tc=cotizaciones[['Estados Unidos']].rename({'Estados Unidos':'dolar'},axis=1)
-    tc = tc.resample('ME').mean()
+    tc = tc.resample('M').mean()
     return tc
 
 def calcula_deva_real():
